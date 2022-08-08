@@ -15,3 +15,4 @@ MonoBehaviour:
   id: UI_Icon_Renders_tier2_rifle
   displayName: Rifle Tier 2
   winningChance: 50
+  atlas: {fileID: 4343727234628468602, guid: 0cca847da4be9814fb4170b3ab3bc22e, type: 2}

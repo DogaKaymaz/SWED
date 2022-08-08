@@ -15,4 +15,4 @@ MonoBehaviour:
   id: ui_icon_render_cons_healthshot_2_neurostim
   displayName: Healthshot x2 Neurostim
   winningChance: 85
-  icon: {fileID: 0}
+  atlas: {fileID: 4343727234628468602, guid: 0cca847da4be9814fb4170b3ab3bc22e, type: 2}

@@ -15,4 +15,4 @@ MonoBehaviour:
   id: UI_icon_chest_big_nolight
   displayName: Big Chest
   winningChance: 100
-  icon: {fileID: 0}
+  atlas: {fileID: 4343727234628468602, guid: 0cca847da4be9814fb4170b3ab3bc22e, type: 2}

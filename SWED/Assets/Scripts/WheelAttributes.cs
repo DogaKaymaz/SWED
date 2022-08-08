@@ -9,14 +9,7 @@ using Random = UnityEngine.Random;
 
 public class WheelAttributes : MonoBehaviour
 {
-    public bool spinning;
     public int currentSpin;
-
-    // Since there are some safe areas without death, I added it to the final list => displayedList.
-    // It's winning chance is 1/displayedPrizeNumber here but, there is a chance I can change it and
-    // add it to the lotto list for the lottery at some point. It is a Prize scriptable object,
-    // so there is a custom winning chance for death too.
-    [SerializeField] private Prize death;
     
     // the endpoint
     [SerializeField] private int maxSpinCount;
@@ -29,43 +22,51 @@ public class WheelAttributes : MonoBehaviour
 
     
     private SetPrize _setPrize;
+    private Spinning _spinning;
+    [SerializeField] private WheelIcons[] wheelIcons;
     private void Start()
     {
         _setPrize = GetComponent<SetPrize>();
+        _spinning = GetComponent<Spinning>();
         currentSpin = 1;
     }
 
     private void Update()
     {
-        if (!spinning && Input.GetKeyDown(KeyCode.Space) && currentSpin < maxSpinCount)
+        if (!_spinning.spinning && Input.GetKeyDown(KeyCode.Space) && currentSpin < maxSpinCount)
         {
             SpinWheel();
-            currentSpin++;
         }
     }
 
     public async void SpinWheel()
     {
-        spinning = true;
-
-        var tasks = new Task[4];
+        _spinning.SpinWheel
+            (_setPrize.earnedPrizeOrderInDisplayedList, 
+            _setPrize.displayedPrizeNumber,
+            _setPrize.earnedPrize);
+        var tasks = new Task[6];
         tasks[0] = _setPrize.SetDisplayedList(ListRange());
-        tasks[1] = _setPrize.CalculateTotalWinningChance();
-        tasks[2] = _setPrize.CreateLottoList();
-        tasks[3] = _setPrize.SelectPrize();
+        tasks[1] = SetSprites();
+        tasks[2] = _setPrize.CalculateTotalWinningChance();
+        tasks[3] = _setPrize.CreateLottoList();
+        tasks[4] = _setPrize.SelectPrize();
+        tasks[5] = _setPrize.PutDeathToList(currentSpin);
 
         await Task.WhenAll(tasks);
-
-        spinning = false;
+        
+        currentSpin++;
     }
-
-    void SelectPrize(Prize[] currentList)
-    { 
-        if (currentSpin % 5 == 0 || currentSpin == 1)
+    
+    private async Task SetSprites()
+    {
+        for (int i = 0; i < _setPrize.displayedList.Length; i++)
         {
+            wheelIcons[i].SetSprite(_setPrize.displayedList[i].GetPrizeSprite());
         }
+        await Task.Yield();
     }
-
+    
     // This method is the part of the code that returns the correct list.
     // It's 1-10 bronze; 10-20 silver; 20-30 gold for now.
     public Prize[] ListRange()

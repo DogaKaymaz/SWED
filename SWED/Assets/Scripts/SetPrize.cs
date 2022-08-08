@@ -13,13 +13,20 @@ public class SetPrize : MonoBehaviour
     public Prize earnedPrize;
     
     // There is 8 slot currently but I made it changeable.
-    [SerializeField] private int displayedPrizeNumber;
+    public int displayedPrizeNumber;
 
     public Prize[] displayedList;
 
     public string[] lottoList;
     
     float totalWinningChances; // Σ winning chances of chosen (b/s/g) list
+    public int earnedPrizeOrderInDisplayedList;
+    
+    // Since there are some safe areas without death, I added it to the final list => displayedList.
+    // It's winning chance is 1/displayedPrizeNumber here but, there is a chance I can change it and
+    // add it to the lotto list for the lottery at some point. It is a Prize scriptable object,
+    // so there is a custom winning chance for death too.
+    [SerializeField] private Prize death;
 
     private void Start()
     {
@@ -34,8 +41,7 @@ public class SetPrize : MonoBehaviour
         {
             var randomNumber = Random.Range(0, prizeList.Length);
             displayedList[i] = prizeList[randomNumber];
-        }
-       await Task.Yield();
+        } await Task.Yield();
     }
 
     public async Task CalculateTotalWinningChance()
@@ -75,9 +81,17 @@ public class SetPrize : MonoBehaviour
             if (displayedList[i].id == lottoList[winnerID])
             {
                 earnedPrize = displayedList[i];
+                earnedPrizeOrderInDisplayedList = i;
                 Debug.Log(earnedPrize);
             }
         }
+        await Task.Yield();
+    }
+
+    public async Task PutDeathToList(int currentSpin)
+    {
+        if (currentSpin % 5 == 0 || currentSpin == 1) return;
+        displayedList[Random.Range(0, displayedPrizeNumber)] = death;
         await Task.Yield();
     }
     

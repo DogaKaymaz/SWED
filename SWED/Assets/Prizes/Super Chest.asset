@@ -15,4 +15,4 @@ MonoBehaviour:
   id: UI_icon_chest_super_nolight
   displayName: Super Chest
   winningChance: 10
-  icon: {fileID: 0}
+  atlas: {fileID: 4343727234628468602, guid: 0cca847da4be9814fb4170b3ab3bc22e, type: 2}
