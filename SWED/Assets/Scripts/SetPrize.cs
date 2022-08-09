@@ -22,11 +22,7 @@ public class SetPrize : MonoBehaviour
     float totalWinningChances; // Σ winning chances of chosen (b/s/g) list
     public int earnedPrizeOrderInDisplayedList;
     
-    // Since there are some safe areas without death, I added it to the final list => displayedList.
-    // It's winning chance is 1/displayedPrizeNumber here but, there is a chance I can change it and
-    // add it to the lotto list for the lottery at some point. It is a Prize scriptable object,
-    // so there is a custom winning chance for death too.
-    [SerializeField] private Prize death;
+    public Prize death;
 
     private void Start()
     {
@@ -34,14 +30,22 @@ public class SetPrize : MonoBehaviour
         displayedList = new Prize[displayedPrizeNumber];
     }
 
-    public async Task SetDisplayedList(Prize[] prizeList)
+    public async Task SetDisplayedList(Prize[] prizeList, int currentSpin)
     {
-        Debug.Log(prizeList);
        for(int i = 0; i < displayedPrizeNumber; i++)
-        {
-            var randomNumber = Random.Range(0, prizeList.Length);
-            displayedList[i] = prizeList[randomNumber];
-        } await Task.Yield();
+       {
+           if (currentSpin % 5 == 0 || currentSpin == 1)
+           {
+               var randomNumber = Random.Range(0, prizeList.Length-1);
+               displayedList[i] = prizeList[randomNumber];
+           }
+           else
+           {
+               var randomNumber = Random.Range(0, prizeList.Length-1);
+               displayedList[i] = prizeList[randomNumber];
+               if (i == displayedPrizeNumber - 1) displayedList[Random.Range(0,displayedList.Length-1)] = death;
+           }
+       } await Task.Yield();
     }
 
     public async Task CalculateTotalWinningChance()
@@ -87,12 +91,4 @@ public class SetPrize : MonoBehaviour
         }
         await Task.Yield();
     }
-
-    public async Task PutDeathToList(int currentSpin)
-    {
-        if (currentSpin % 5 == 0 || currentSpin == 1) return;
-        displayedList[Random.Range(0, displayedPrizeNumber)] = death;
-        await Task.Yield();
-    }
-    
 }

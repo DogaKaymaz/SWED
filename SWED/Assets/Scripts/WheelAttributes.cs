@@ -7,7 +7,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.U2D;
 using UnityEngine.UI;
-using Random = UnityEngine.Random;
 
 public class WheelAttributes : MonoBehaviour
 {
@@ -55,44 +54,46 @@ public class WheelAttributes : MonoBehaviour
 
     public async void SpinWheel()
     {
-
         if (!_spinning.spinning && currentSpin < maxSpinCount)
         {
-        
-        _spinning.SpinWheel
+            currentSpin++;
+            
+            _spinning.SpinWheel
             (_setPrize.earnedPrizeOrderInDisplayedList, 
             _setPrize.displayedPrizeNumber);
-        var tasks = new Task[7];
-        tasks[0] = _setPrize.SetDisplayedList(ListRange());
+            
+        var tasks = new Task[5];
+        tasks[0] = _setPrize.SetDisplayedList(ListRange(), currentSpin);
         tasks[1] = SetSprites();
         tasks[2] = _setPrize.CalculateTotalWinningChance();
         tasks[3] = _setPrize.CreateLottoList();
         tasks[4] = _setPrize.SelectPrize();
-        tasks[5] = _setPrize.PutDeathToList(currentSpin);
-        tasks[6] = SetEarnedPrizeCard();
         
         await Task.WhenAll(tasks);
 
-        currentSpin++;
-        SetPanel();
+        StartCoroutine(SetEarnedPrizeCard());
         
+        SetPanel();
+        }
+
+        else if (currentSpin == maxSpinCount)
+        {
+            _cardCanvasManager.Quit();
         }
     }
 
-    private async Task SetEarnedPrizeCard()
+    private IEnumerator SetEarnedPrizeCard()
     {
-        if (!_spinning.spinning)
+        yield return new WaitUntil(() => !_spinning.spinning);
+        _cardCanvasManager.OpenCard();
+        _cardCanvasManager.SetCard(_setPrize.earnedPrize);
+
+        if (_setPrize.earnedPrize == _setPrize.death)
         {
-            _cardCanvasManager.OpenCard();
-            _cardCanvasManager.SetCard(_setPrize.earnedPrize);
+            _cardCanvasManager.EndGame();
         }
-        else
-        {
-            await SetEarnedPrizeCard();
-        }
-        
-        await Task.Yield();
     }
+    
     
     private async Task SetSprites()
     {
