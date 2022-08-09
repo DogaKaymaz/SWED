@@ -11,30 +11,19 @@ public class Spinning : MonoBehaviour
     private int topOff;
     public bool spinning;
 
-    private CardCanvasManager _cardCanvasManager;
-
     private void Start()
     {
-        _cardCanvasManager = GetComponent<CardCanvasManager>();
         spinning = false;
         topOff = 0;
     }
 
-    public void SpinWheel(int reachPoint, int howManySlot, Prize earnedPrize)
+    public void SpinWheel(int reachPoint, int howManySlot)
     {
         spinning = true;
         var rotateSum = 360 * howManyTurn + ((360 / howManySlot) * reachPoint) + ((360 / howManySlot) * topOff);
         topOff = howManySlot - reachPoint;
         transform.DOLocalRotate(new Vector3(0, 0, rotateSum), time, RotateMode.WorldAxisAdd).SetRelative(true)
-            .OnComplete(() => SpinningEnded(earnedPrize));
+            .OnComplete(() => spinning = false);
         
-    }
-
-    private void SpinningEnded(Prize earnedPrize)
-    {
-        spinning = false;
-        
-        _cardCanvasManager.OpenCard();
-        _cardCanvasManager.SetCard(earnedPrize);
     }
 }
