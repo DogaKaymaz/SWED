@@ -55,7 +55,6 @@ SpriteAtlas:
   - {fileID: 21300000, guid: afab5e53b8732a54cb99d9c10eb7c469, type: 3}
   - {fileID: 21300000, guid: 42c237a97d0a9f64596836e069a27bf4, type: 3}
   - {fileID: 21300000, guid: 53e65a5df0756ae4898c611e43c8df7f, type: 3}
-  - {fileID: 21300000, guid: e5b627dd1d494fc45a16474dfd5ad95e, type: 3}
   - {fileID: 21300000, guid: 9a04771f6b2c9a44c9ec5cdf64cf04cb, type: 3}
   m_PackedSpriteNamesToIndex:
   - ui_spin_bronze_indicator
@@ -63,7 +62,6 @@ SpriteAtlas:
   - ui_spin_silver_base
   - ui_spin_golden_base
   - ui_spin_silver_indicator
-  - ui_spin_generic_button
   - ui_spin_golden_indicator
   m_RenderDataMap: {}
   m_Tag: ui_spin

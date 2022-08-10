@@ -3407,7 +3407,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f063f16f474eb8d41aea90d02794ce99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vfxOfferShine: {fileID: 2800000, guid: 2ba26e621fe1d67478877c334c806d7b, type: 3}
 --- !u!4 &1837317765
 Transform:
   m_ObjectHideFlags: 0
